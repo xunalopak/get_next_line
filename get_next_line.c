@@ -6,7 +6,7 @@
 /*   By: rchampli <rchampli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 09:16:41 by rchampli          #+#    #+#             */
-/*   Updated: 2021/11/09 12:17:55 by rchampli         ###   ########.fr       */
+/*   Updated: 2021/11/09 17:17:09 by rchampli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,20 +16,29 @@ size_t	ft_strlen(const char *s, int mode)
 {
 	size_t	i;
 
-	i = 0;
+	i = -1;
 	if (!s)
 		return (0);
 	if (mode == 1)
-	{
-		while (s[i] != '\0' && s[i] != '\n')
-			i++;
-	}
+		while (s[++i] != '\0' && s[i] != '\n')
+			;
 	else
-	{
-		while (s[i] != '\0')
+		while (s[++i] != '\0')
 			i++;
-	}
 	return (i);
+}
+
+char	*ft_strcpy(char *dest, const char *src)
+{
+	size_t	i;
+
+	i = -1;
+	if (!src)
+		return (0);
+	while (src[++i])
+		dest[i] = src[i];
+	dest[i] = '\0';
+	return (dest);
 }
 
 void	*ft_memset(void *s, int c, size_t n)
@@ -46,28 +55,12 @@ void	*ft_memset(void *s, int c, size_t n)
 
 void	*ft_calloc(size_t nmemb, size_t size)
 {
-	char			*new;
+	char	*new;
 
 	new = (char *)malloc(size * nmemb);
 	if (!new)
 		return (0);
 	return (ft_memset(new, 0, size * nmemb));
-}
-
-static char	*ft_alloc(size_t size)
-{
-	char	*s;
-	size_t	i;
-
-	i = 0;
-	size = size + 1;
-	s = ft_calloc(sizeof(char), size);
-	if (!s)
-		return (0);
-	while (s[i])
-		i++;
-	s[i] = '\0';
-	return (s);
 }
 
 static char	*ft_strchr(const char *s, int c)
@@ -90,68 +83,34 @@ static char	*ft_strjoin(char const *s1, char const *s2)
 	size_t	j;
 	char	*str;
 
-	i = 0;
-	j = 0;
+	i = -1;
+	j = -1;
 	len = ft_strlen(s1, 0) + ft_strlen(s2, 0);
 	str = ft_calloc(sizeof(char), len + 1);
 	if (!str || !s1 || !s2)
 		return (0);
-	while (s1[i])
-	{
+	while (s1[++i])
 		str[i] = s1[i];
-		i++;
-	}
-	while (s2[j])
-	{
+	while (s2[++j])
 		str[i + j] = s2[j];
-		j++;
-	}
 	str[i + j] = '\0';
 	return (str);
 }
 
-char	*ft_strdup(const char *s)
+static char	*ft_save(char *line, size_t *i)
 {
-	unsigned int	i;
-	unsigned char	*dest;
-
-	i = 0;
-	dest = malloc(sizeof(char) * ft_strlen(s, 0) + 1);
-	if (!dest)
-		return (0);
-	while (s[i])
+	if (ft_strchr(line, '\n'))
 	{
-		dest[i] = s[i];
-		i++;
+		ft_strcpy(line, ft_strchr(line, '\n') + 1);
+		return (line);
 	}
-	dest[i] = '\0';
-	return ((char *)dest);
-}
-
-char	*ft_substr(char const *s, unsigned int start, size_t len)
-{
-	size_t			i;
-	char			*str;
-
-	i = 0;
-	if (!s)
-		return (0);
-	if (ft_strlen(s, 0) < start)
+	if (ft_strlen(line, 1) > 0)
 	{
-		return (ft_strdup(""));
+		ft_strcpy(line, ft_strchr(line, '\0'));
+		*i = 0;
+		return (line);
 	}
-	if (ft_strlen(&s[start], 0) <= len)
-		len = ft_strlen(&s[start], 0);
-	str = ft_calloc(sizeof(char), (len + 1));
-	if (!str)
-		return (0);
-	while (i < len)
-	{
-		str[i] = s[start + i];
-		i++;
-	}
-	str[i] = '\0';
-	return (str);
+	return (0);
 }
 
 char	*get_next_line(int fd)
@@ -159,12 +118,13 @@ char	*get_next_line(int fd)
 	static char	*line;
 	char		*line_tmp;
 	static char	buf[BUFFER_SIZE + 1];
+	size_t		intbuff;
 	size_t		i;
-	int			intbuff;
 
-	i = 0;
-	line = ft_alloc(0);
-	if (!line || fd == -1 || BUFFER_SIZE < 1)
+	i = 1;
+	line = 0;
+	line = ft_calloc(0, 0);
+	if (!line || fd < 0 || BUFFER_SIZE < 1)
 		return (0);
 	intbuff = read(fd, buf, BUFFER_SIZE);
 	while (ft_strchr((const char *)line, '\n') == 0
@@ -176,7 +136,7 @@ char	*get_next_line(int fd)
 		free(line_tmp);
 		intbuff = read(fd, buf, BUFFER_SIZE);
 	}
-	line_tmp = ft_substr(line, 0, ft_strlen(line, 1));
-	free(line);
-	return (line);
+	if ((ft_save(line, &i) != 0) && i == 1)
+		return (line);
+	return (0);
 }
