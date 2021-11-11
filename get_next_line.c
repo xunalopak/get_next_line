@@ -6,7 +6,7 @@
 /*   By: rchampli <rchampli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 09:16:41 by rchampli          #+#    #+#             */
-/*   Updated: 2021/11/11 13:05:18 by rchampli         ###   ########.fr       */
+/*   Updated: 2021/11/11 15:19:39 by rchampli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static char	*ft_get_line(char *left_str)
 		return (NULL);
 	while (left_str[i] && left_str[i] != '\n')
 		i++;
-	str = (char *)malloc(sizeof(char) * (i + 1));
+	str = (char *)malloc(sizeof(char) * (i + 2));
 	if (!str)
 		return (NULL);
 	i = 0;

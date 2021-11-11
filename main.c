@@ -1,29 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rchampli <rchampli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/05 09:16:35 by rchampli          #+#    #+#             */
-/*   Updated: 2021/11/11 15:15:48 by rchampli         ###   ########.fr       */
+/*   Created: 2021/11/11 15:10:25 by rchampli          #+#    #+#             */
+/*   Updated: 2021/11/11 15:10:39 by rchampli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
-# include <unistd.h>
-# include <stdlib.h>
 
-char	*get_next_line(int fd);
-size_t	ft_strlen(char *s);
-char	*ft_strchr(char *s, int c);
-char	*ft_strjoin(char *left_str, char *buff);
-void	*ft_memset(void *s, int c, size_t n);
-void	*ft_calloc(size_t nmemb, size_t size);
+#include <stdio.h>
+#include <unistd.h>
+#include <fcntl.h>
 
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 2
-# endif
+char    *get_next_line(int fd);
 
-#endif
+int    main(void)
+{
+    int        fd1;
+    int        i;
+    char    *ret;
+
+    fd1 = open("bible.txt", 0);
+    while ((ret = get_next_line(fd1)))
+    {
+        printf("%s", ret);
+    }
+}
