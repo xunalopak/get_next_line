@@ -6,13 +6,13 @@
 /*   By: rchampli <rchampli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 09:16:41 by rchampli          #+#    #+#             */
-/*   Updated: 2021/11/11 12:42:15 by rchampli         ###   ########.fr       */
+/*   Updated: 2021/11/11 13:05:18 by rchampli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_get_line(char *left_str)
+static char	*ft_get_line(char *left_str)
 {
 	int		i;
 	char	*str;
@@ -22,7 +22,7 @@ char	*ft_get_line(char *left_str)
 		return (NULL);
 	while (left_str[i] && left_str[i] != '\n')
 		i++;
-	str = (char *)malloc(sizeof(char) * (i + 2));
+	str = (char *)malloc(sizeof(char) * (i + 1));
 	if (!str)
 		return (NULL);
 	i = 0;
@@ -40,7 +40,7 @@ char	*ft_get_line(char *left_str)
 	return (str);
 }
 
-char	*ft_new_left_str(char *left_str)
+static char	*ft_new_left_str(char *left_str)
 {
 	int		i;
 	int		j;
@@ -66,7 +66,7 @@ char	*ft_new_left_str(char *left_str)
 	return (str);
 }
 
-char	*ft_read_to_left_str(int fd, char *left_str)
+static char	*ft_read_to_left_str(int fd, char *left_str)
 {
 	char	*buff;
 	int		rd_bytes;
